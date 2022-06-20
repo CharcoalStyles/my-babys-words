@@ -9,3 +9,30 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Child {
+  id             String   @id @default(cuid())
+  name           String
+  birthDate      DateTime
+  words          Word[]
+  primaryColor   String
+  secondaryColor String
+}
+
+model Word {
+  id       String    @id @default(cuid())
+  word     String
+  wordUses WordUse[]
+  Child    Child     @relation(fields: [childId], references: [id])
+  childId  String
+}
+
+model WordUse {
+  id             String   @id @default(cuid())
+  date           DateTime @default(now())
+  pronounciation Int
+  context        Int
+
+  word   Word   @relation(fields: [wordId], references: [id])
+  wordId String
+}
